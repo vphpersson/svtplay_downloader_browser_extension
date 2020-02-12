@@ -58,15 +58,15 @@ function make_port(download_id, initial_download_info) {
 
             browser.storage.local.set({
                 [download_id]: {
-                    ...initial_download_info
+                    ...initial_download_info,
                     status: DownloadStatus.ERROR,
-                    error: response_object.error,
+                    error: response_object.error
                 }
             });
         } else {
             browser.storage.local.set({
                 [download_id]: {
-                    ...initial_download_info
+                    ...initial_download_info,
                     ...response_object,
                 }
             });

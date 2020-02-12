@@ -1,6 +1,6 @@
 const path = require('path');
 
-config = {
+const config = {
     mode: 'production',
     module: {
         rules: [
