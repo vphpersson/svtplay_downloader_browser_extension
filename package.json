@@ -1,0 +1,19 @@
+{
+  "name": "svtplay_downloader_browser_extension",
+  "version": "1.0.0",
+  "dependencies": {
+    "jsutils": "github:vphpersson/jsutils",
+    "lit-html": "latest"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.8.4",
+    "@babel/plugin-proposal-class-properties": "^7.8.3",
+    "@babel/preset-env": "^7.8.4",
+    "babel-loader": "^8.0.6",
+    "webpack": "^4.41.6",
+    "webpack-cli": "^3.3.11"
+  },
+  "scripts": {
+    "build": "webpack"
+  }
+}

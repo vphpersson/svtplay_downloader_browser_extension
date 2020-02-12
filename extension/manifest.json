@@ -1,0 +1,42 @@
+{
+  "name": "Svtplay Downloader",
+  "version": "0.9",
+  "icons": {
+    "48": "/icons/svtplay_downloader_icon.svg",
+    "96": "/icons/svtplay_downloader_icon.svg"
+  },
+
+  "permissions": [
+    "activeTab",
+    "nativeMessaging",
+    "storage",
+    "https://www.svtstatic.se/image/*"
+  ],
+
+  "background": {
+    "page": "components/background/background.html"
+  },
+
+  "page_action": {
+    "browser_style": true,
+    "default_icon": {
+      "19": "/icons/svtplay_downloader_icon.svg",
+      "38": "/icons/svtplay_downloader_icon.svg"
+    },
+    "default_title": "Download video",
+    "show_matches": [
+      "*://www.svtplay.se/video/*/*"
+    ]
+  },
+
+  "browser_action": {
+    "default_icon": "/icons/svtplay_downloader_icon.svg",
+    "default_title": "Svtplay downloads",
+    "default_popup": "/components/browser_action/browser_action.html"
+  },
+
+
+  "description": "Provides functionality that allows one to download videos on the Svtplay website.",
+  "manifest_version": 2
+}
+
