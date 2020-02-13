@@ -2,7 +2,7 @@ import {html, render} from 'lit-html';
 import {repeat} from 'lit-html/directives/repeat';
 import RedBlackTree from 'jsutils/trees/red_black_tree';
 
-const DOWNLOAD_TEMPLATE = (download_id, cover_src, page_url, title, status) => {
+const DownloadTemplate = (download_id, cover_src, page_url, title, status) => {
 
     function clear_download() {
         browser.runtime.sendMessage({
@@ -56,6 +56,7 @@ const DOWNLOAD_TEMPLATE = (download_id, cover_src, page_url, title, status) => {
         }
     })();
 
+    // TODO: Add the onclick event handler for the action icon.
     return html`
         <li class="download" id=${download_id}>
             <div class="download__cover_container">
@@ -85,6 +86,7 @@ function render_downloads(downloads_rbt) {
 }
 
 function initialize_storage_sync(downloads_rbt) {
+    // TODO: Ascertain whether the listener is still registered after the browser action is closed.
     browser.storage.onChanged.addListener((changes, area) => {
         if (area !== 'local')
             return;
@@ -93,7 +95,7 @@ function initialize_storage_sync(downloads_rbt) {
             if (!('newValue' in change)) {
                 downloads_rbt.delete(download_id);
             } else {
-                const download = DOWNLOAD_TEMPLATE(download_id, ...change.newValue);
+                const download = DownloadTemplate(download_id, ...change.newValue);
                 if (change.oldValue === undefined) {
                     downloads_rbt.insert(download_id, download)
                 } else {
@@ -110,7 +112,7 @@ async function on_dom_content_loaded() {
     const downloads_rbt = RedBlackTree.from(
         Object.entries(await browser.storage.local.get()).map(([download_id, download_data]) => {
             const {thumbnail_base64: cover_src, page_url, title, status} = download_data;
-            return DOWNLOAD_TEMPLATE(download_id, cover_src, page_url, title, status);
+            return DownloadTemplate(download_id, cover_src, page_url, title, status);
         })
     );
 
