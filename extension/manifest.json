@@ -6,6 +6,13 @@
     "96": "/icons/svtplay_downloader_icon.svg"
   },
 
+  "applications": {
+    "gecko": {
+      "id": "vph@pls.com",
+      "strict_min_version": "50.0"
+    }
+  },
+
   "permissions": [
     "activeTab",
     "nativeMessaging",
@@ -14,7 +21,7 @@
   ],
 
   "background": {
-    "page": "components/background/background.html"
+    "page": "/components/background/background.html"
   },
 
   "page_action": {

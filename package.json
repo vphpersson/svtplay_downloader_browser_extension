@@ -14,6 +14,6 @@
     "webpack-cli": "^3.3.11"
   },
   "scripts": {
-    "build": "webpack"
+    "build": "mkdir dist; rm --recursive --force dist/* && cp --recursive extension/* dist && webpack"
   }
 }

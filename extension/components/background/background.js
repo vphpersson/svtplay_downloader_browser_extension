@@ -49,27 +49,50 @@ function update_badge_count_text() {
 
 function make_port(download_id, initial_download_info) {
     const port = browser.runtime.connectNative(CONFIG.native_application_name);
+    let last_download_info = null;
 
     port.onMessage.addListener(response => {
-        const response_object = JSON.parse(response);
-        const new_download_info = 'error' in response_object
-            ? {status: DownloadStatus.ERROR, error: response_object.error}
-            : response_object
+        const new_download_info = 'error' in response
+            ? {status: DownloadStatus.ERROR, error: response.error}
+            : response
         ;
 
-        browser.storage.local.set({[download_id]: {...initial_download_info, ...new_download_info}});
+        const download_info = {...initial_download_info, ...new_download_info};
+        last_download_info = download_info;
 
-        if ('error' in response_object || response_object.status === DownloadStatus.COMPLETED) {
+        browser.storage.local.set({[download_id]: download_info});
+
+        if ('error' in response) {
+            console.error(response.error);
+
             DOWNLOAD_ID_TO_PORT.delete(download_id);
             port.disconnect();
             update_badge_count_text();
         }
     });
 
-    // NOTE: Run when the native application calls `port.disconnect()`.
     port.onDisconnect.addListener(port => {
-        if ('error' in port)
+
+        let new_download_info;
+        if (port.error !== null) {
             console.error(port.error);
+            new_download_info = {status: DownloadStatus.ERROR, error: 'Unexpected error.'};
+        } else if (last_download_info.status === DownloadStatus.IN_PROGRESS) {
+            DOWNLOAD_ID_TO_PORT.delete(download_id);
+            new_download_info = {
+                status: DownloadStatus.COMPLETED,
+                completion_timestamp: Date.now(),
+                download_byte_size: last_download_info.progress.overall_num_bytes_downloaded
+            }
+        }
+
+        browser.storage.local.set({
+            [download_id]: {
+                ...initial_download_info,
+                ...new_download_info
+            }
+        });
+
         update_badge_count_text();
     });
 
@@ -84,7 +107,7 @@ async function handle_page_action_click(tab) {
     const download_id = `${Date.now()}|${tab.url}`;
     const initial_download_info = {
         status: DownloadStatus.IN_PROGRESS,
-        thumbnail_base64: await convert_blob(new Blob([thumbnail]), BlobConversionType.DataURL),
+        cover_src: await convert_blob(new Blob([thumbnail]), BlobConversionType.DataURL),
         page_url: tab.url,
         title,
     };
@@ -98,7 +121,7 @@ async function handle_page_action_click(tab) {
     update_badge_count_text();
 
     // Send a message to the native application.
-    port.postMessage(JSON.stringify({url: tab.url}));
+    port.postMessage({url: tab.url});
 }
 
 browser.pageAction.onClicked.addListener(handle_page_action_click);

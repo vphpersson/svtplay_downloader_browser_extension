@@ -1,7 +1,7 @@
 const path = require('path');
 
 const config = {
-    mode: 'production',
+    mode: 'none',
     module: {
         rules: [
             {
@@ -28,8 +28,8 @@ const config = {
 const background_config = {
     entry: './extension/components/background/background.js',
     output: {
-        filename: 'background_2.js',
-        path: path.resolve(__dirname, './extension/components/background')
+        filename: 'background.js',
+        path: path.resolve(__dirname, './dist/components/background')
     },
     ...config
 };
@@ -37,8 +37,8 @@ const background_config = {
 const browser_action_config = {
     entry: './extension/components/browser_action/browser_action.js',
     output: {
-        filename: 'browser_action_2.js',
-        path: path.resolve(__dirname, './extension/components/browser_action')
+        filename: 'browser_action.js',
+        path: path.resolve(__dirname, './dist/components/browser_action')
     },
     ...config
 };
